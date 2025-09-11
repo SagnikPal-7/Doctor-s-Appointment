@@ -7,7 +7,7 @@ module.exports = {
         primary: "#5f6FFF",
       },
       gridTemplateColumns: {
-        auto: "repeat(auto-fit, minmax(200px, 1fr))",
+        auto: "repeat(auto-fill, minmax(200px, 1fr))",
       },
     },
   },
