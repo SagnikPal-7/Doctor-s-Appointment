@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
+import RelatedDoctor from "../components/RelatedDoctor";
 
 const Appointment = () => {
   const { docId } = useParams();
@@ -36,16 +37,15 @@ const Appointment = () => {
   };
 
   const getAvailableSlots = async () => {
-    setDocSlots([]);
-
+    let slots = [];
     let today = new Date();
-
-    for (let i = 0; i < 7; i++) {
+    let daysAdded = 0;
+    let offset = 0;
+    while (daysAdded < 7) {
       let currentDate = new Date(today);
-      currentDate.setDate(today.getDate() + i);
+      currentDate.setDate(today.getDate() + offset);
 
-      let endTime = new Date();
-      endTime.setDate(today.getDate() + i);
+      let endTime = new Date(currentDate);
       endTime.setHours(21, 0, 0, 0);
 
       if (today.getDate() === currentDate.getDate()) {
@@ -74,8 +74,16 @@ const Appointment = () => {
         currentDate.setMinutes(currentDate.getMinutes() + 30);
       }
 
-      setDocSlots((prev) => [...prev, timeSlots]);
+      // Only add this day if at least one slot is in the future
+      const now = new Date();
+      if (timeSlots.some((slot) => slot.datetime > now)) {
+        slots.push(timeSlots);
+        daysAdded++;
+      }
+      offset++;
     }
+    setDocSlots(slots);
+    setSlotIndex(0);
   };
 
   useEffect(() => {
@@ -182,6 +190,9 @@ const Appointment = () => {
             Book an Appointment
           </button>
         </div>
+
+        {/*---- Related Doctors ---- */}
+        <RelatedDoctor docId={docId} speciality={docInfo?.speciality} />
       </div>
     )
   );

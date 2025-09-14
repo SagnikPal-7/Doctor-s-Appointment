@@ -113,7 +113,10 @@ const Doctor = () => {
         <div className="w-full grid grid-cols-auto gap-4">
           {filteredDoctors.map((item, index) => (
             <div
-              onClick={() => navigate(`/appointment/${item._id}`)}
+              onClick={() => {
+                navigate(`/appointment/${item._id}`);
+                scrollTo({ top: 0, behavior: "smooth" });
+              }}
               className="border border-blue-200 rounded-xl overflow-hidden cursor-pointer hover:translate-y-[-10px] transition-all duration-500"
               key={index}
             >

@@ -16,7 +16,7 @@ const Banner = () => {
         <button
           onClick={() => {
             navigate("/login");
-            scrollTo(0, 0);
+            scrollTo({ top: 0, behavior: "smooth" });
           }}
           className="bg-white text-sm sm:text-base text-gray-600 px-8 py-3 rounded-full mt-6 hover:shadow-lg hover:scale-105 transition-all"
         >
