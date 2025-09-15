@@ -22,7 +22,12 @@ const MyProfile = () => {
       <img className="w-24 h-24 rounded-full" src={userData.image} alt="" />
       {isEdit ? (
         <input
-          className="bg-gray-100 text-3xl font-medium max-w-60 mt-4"
+          className="bg-gray-100 text-3xl font-medium mt-4 px-1"
+          style={{
+            width: `${userData.name.length + 1}ch`,
+            minWidth: "4ch",
+            maxWidth: "100%",
+          }}
           type="text"
           value={userData.name}
           onChange={(e) =>
@@ -47,7 +52,12 @@ const MyProfile = () => {
           <p className="font-medium">Phone:</p>
           {isEdit ? (
             <input
-              className="bg-gray-100 max-w-52"
+              className="bg-gray-100 px-1"
+              style={{
+                width: `${userData.phone.length + 1}ch`,
+                minWidth: "8ch",
+                maxWidth: "100%",
+              }}
               type="text"
               value={userData.phone}
               onChange={(e) =>
@@ -62,7 +72,12 @@ const MyProfile = () => {
           {isEdit ? (
             <p>
               <input
-                className="bg-gray-100 max-w-52"
+                className="bg-gray-100 px-1"
+                style={{
+                  width: `${userData.address.line1.length + 1}ch`,
+                  minWidth: "8ch",
+                  maxWidth: "100%",
+                }}
                 onChange={(e) =>
                   setUserData((prev) => ({
                     ...prev,
@@ -74,7 +89,12 @@ const MyProfile = () => {
               />
               <br />
               <input
-                className="bg-gray-100 max-w-52 mt-1"
+                className="bg-gray-100 px-1 mt-1"
+                style={{
+                  width: `${userData.address.line2.length + 1}ch`,
+                  minWidth: "8ch",
+                  maxWidth: "100%",
+                }}
                 onChange={(e) =>
                   setUserData((prev) => ({
                     ...prev,
@@ -101,7 +121,12 @@ const MyProfile = () => {
           <p className="font-medium">Gender</p>
           {isEdit ? (
             <select
-              className="max-w-20 bg-gray-100"
+              className="bg-gray-100 px-1"
+              style={{
+                width: `${userData.gender.length + 2}ch`,
+                minWidth: "8ch",
+                maxWidth: "100%",
+              }}
               value={userData.gender}
               onChange={(e) =>
                 setUserData((prev) => ({ ...prev, gender: e.target.value }))
@@ -118,7 +143,8 @@ const MyProfile = () => {
           <p className="font-medium">Date of Birth</p>
           {isEdit ? (
             <input
-              className="bg-gray-100 max-w-28"
+              className="bg-gray-100 px-1"
+              style={{ width: "15ch", minWidth: "8ch", maxWidth: "100%" }}
               type="date"
               value={userData.dob}
               onChange={(e) =>
@@ -131,11 +157,21 @@ const MyProfile = () => {
         </div>
       </div>
 
-      <div>
+      <div className="mt-10">
         {isEdit ? (
-          <button onClick={() => setIsEdit(false)}>Save information</button>
+          <button
+            className="border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all hover:shadow-lg hover:scale-105"
+            onClick={() => setIsEdit(false)}
+          >
+            Save information
+          </button>
         ) : (
-          <button onClick={() => setIsEdit(true)}>Edit</button>
+          <button
+            className="border border-primary px-8 py-2 rounded-full hover:bg-primary hover:text-white transition-all hover:shadow-lg hover:scale-105"
+            onClick={() => setIsEdit(true)}
+          >
+            Edit
+          </button>
         )}
       </div>
     </div>
