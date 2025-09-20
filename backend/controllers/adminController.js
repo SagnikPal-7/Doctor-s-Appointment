@@ -34,12 +34,14 @@ const addDoctor = async (req, res) => {
       !fees ||
       !address
     ) {
-      return res.json({ success: false, message: "Missing Details" });
+      return res
+        .status(500)
+        .json({ success: false, message: "Missing Details" });
     }
 
     //validating email format
     if (!validator.isEmail(email)) {
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: "Please enter a valid email",
       });
@@ -47,7 +49,7 @@ const addDoctor = async (req, res) => {
 
     //validating password strength
     if (password.length < 8) {
-      return res.json({
+      return res.status(500).json({
         success: false,
         message: "Password must be at least 8 characters long and strong",
       });
@@ -88,7 +90,7 @@ const addDoctor = async (req, res) => {
     res.json({ success: true, message: "Doctor Added Successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: "Server Error" });
+    res.status(500).json({ success: false, message: "Server Error" });
   }
 };
 
@@ -104,11 +106,11 @@ const loginAdmin = async (req, res) => {
       const token = jwt.sign(email + password, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {
-      res.json({ success: false, message: "Invalid Credentials" });
+      res.status(401).json({ success: false, message: "Invalid Credentials" });
     }
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 
