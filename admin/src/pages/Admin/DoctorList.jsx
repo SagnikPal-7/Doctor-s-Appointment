@@ -11,27 +11,36 @@ const DoctorList = () => {
   }, [aToken]);
 
   return (
-    <div className="w-3/4 m-5 max-h-[90vh] overflow-y-scroll">
-      <h1 className="text-lg font-medium">All Doctors</h1>
-      <div className="w-full flex flex-wrap gap-4 pt-5 gap-y-6">
+    <div className="w-3/4 flex flex-col items-center pt-8 px-8 max-h-[90vh] overflow-y-auto">
+      <h1 className="text-2xl font-semibold mb-6 self-start">All Doctors</h1>
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 justify-items-center pr-5">
         {doctors.map((item, index) => (
           <div
-            className="border border-indigo-200 rounded-xl max-w-56 overflow-hidden cursor-pointer group"
+            className="bg-white border border-indigo-100 rounded-2xl shadow-md w-56 min-h-[320px] flex flex-col items-center overflow-hidden cursor-pointer group transition-all duration-300 hover:shadow-lg"
             key={index}
           >
-            <img
-              className="bg-indigo-50 group-hover:bg-primary transition-all duration-500"
-              src={item.image}
-              alt=""
-            />
-            <div className="p-4">
-              <p className="text-neutral-800 text-lg font-medium">
+            <div className="w-full h-48 flex items-center justify-center bg-indigo-50 group-hover:bg-indigo-100 transition-all duration-300">
+              <img
+                className="object-contain h-52 w-40"
+                src={item.image}
+                alt={item.name}
+              />
+            </div>
+            <div className="w-full px-4 py-3 flex flex-col items-start">
+              <p className="text-neutral-900 text-lg font-semibold leading-tight truncate w-full">
                 {item.name}
               </p>
-              <p className="text-zinc-600 text-sm">{item.speciality}</p>
-              <div className="mt-2 flex items-center gap-1 text-sm">
-                <input type="checkbox" checked={item.available} />
-                <p>Available</p>
+              <p className="text-indigo-600 text-sm font-medium mb-2 w-full truncate">
+                {item.speciality}
+              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <input
+                  type="checkbox"
+                  checked={item.available}
+                  readOnly
+                  className="accent-indigo-500"
+                />
+                <span className="text-zinc-700 text-sm">Available</span>
               </div>
             </div>
           </div>
