@@ -81,4 +81,18 @@ const loginUser = async (req, res) => {
   }
 };
 
-export { registerUser, loginUser };
+//API to get user profile data
+const getUserProfile = async (req, res) => {
+  try {
+    const { userId } = req.body;
+    const userData = await userModel.findById(userId).select("-password");
+    res.json({ success: true, userData });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
+export { registerUser, loginUser, getUserProfile };
