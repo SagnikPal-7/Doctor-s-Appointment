@@ -14,6 +14,7 @@ adminRouter.post("/add-doctor", authAdmin, upload.single("image"), addDoctor);
 // For login, do NOT use multer
 adminRouter.post("/login", loginAdmin);
 
+// all doctors
 adminRouter.post("/all-doctors", authAdmin, allDoctors);
 
 adminRouter.post("/change-availability", authAdmin, changeAvailability);
