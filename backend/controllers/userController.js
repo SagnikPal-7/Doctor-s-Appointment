@@ -99,8 +99,9 @@ const getUserProfile = async (req, res) => {
 //API to update user profile data
 const updateUserProfile = async (req, res) => {
   try {
-    const { userId, name, phone, address, dob, gender } = req.body;
+    const { name, phone, address, dob, gender } = req.body;
     const imageFile = req.file;
+    const userId = req.userId; // get userId from auth middleware
 
     if (!name || !phone || !dob || !gender) {
       return res.json({ success: false, message: "Data Missing" });
