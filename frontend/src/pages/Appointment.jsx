@@ -1,12 +1,21 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { assets } from "../assets/assets";
 import RelatedDoctor from "../components/RelatedDoctor";
+import { toast } from "react-toastify";
+import axios from "axios";
 
 const Appointment = () => {
   const { docId } = useParams();
-  const { doctors, currencySymbol } = useContext(AppContext);
+  const {
+    doctors,
+    currencySymbol,
+    backendUrl,
+    token,
+    getDoctorsData,
+    userData,
+  } = useContext(AppContext);
 
   const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
   // const months = [
@@ -29,6 +38,8 @@ const Appointment = () => {
   const [docSlots, setDocSlots] = useState([]);
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState("");
+
+  const navigate = useNavigate();
 
   const fetchDocInfo = async () => {
     const docInfo = doctors.find((doc) => doc._id === docId);
@@ -86,8 +97,47 @@ const Appointment = () => {
     setSlotIndex(0);
   };
 
+  const bookAppointment = async () => {
+    if (!token) {
+      toast.warn("Login to book appointment");
+      return navigate("/login");
+    }
+
+    try {
+      const data = docSlots[slotIndex][0].datetime;
+      let day = data.getDate();
+      let month = data.getMonth() + 1;
+      let year = data.getFullYear();
+      const slotDate = day + "_" + month + "_" + year;
+      // Get userId from context userData
+      const userId =
+        typeof userData === "object" && userData?._id ? userData._id : null;
+      if (!userId) {
+        toast.error("User data not loaded. Please re-login.");
+        return;
+      }
+      const response = await axios.post(
+        backendUrl + "/api/user/book-appointment",
+        { userId, docId, slotDate, slotTime },
+        { headers: { token } }
+      );
+      const apdata = response.data;
+      if (apdata.success) {
+        toast.success(apdata.message);
+        getDoctorsData();
+        navigate("/my-appointments");
+      } else {
+        toast.error(apdata.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error in booking appointment");
+    }
+  };
+
   useEffect(() => {
     fetchDocInfo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [doctors, docId]);
 
   useEffect(() => {
@@ -186,7 +236,10 @@ const Appointment = () => {
               ))}
           </div>
 
-          <button className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 hover:shadow-lg hover:scale-105 transition-all">
+          <button
+            onClick={bookAppointment}
+            className="bg-primary text-white text-sm font-light px-14 py-3 rounded-full my-6 hover:shadow-lg hover:scale-105 transition-all"
+          >
             Book an Appointment
           </button>
         </div>
