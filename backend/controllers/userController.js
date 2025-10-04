@@ -187,10 +187,25 @@ const bookAppointment = async (req, res) => {
   }
 };
 
+//API to get user appointments for frontend my-appointments page
+const listAppointment = async (req, res) => {
+  try {
+    const userId = req.userId; // get userId from auth middleware
+    const appointments = await appointmentModel.find({ userId });
+    res.json({ success: true, appointments });
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal server error" });
+  }
+};
+
 export {
   registerUser,
   loginUser,
   getUserProfile,
   updateUserProfile,
   bookAppointment,
+  listAppointment,
 };
