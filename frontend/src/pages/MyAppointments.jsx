@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MyAppointments = () => {
   const { backendUrl, token, getDoctorsData } = useContext(AppContext);
@@ -22,6 +23,8 @@ const MyAppointments = () => {
     "Nov",
     "Dec",
   ];
+
+  const navigate = useNavigate();
 
   const slotDateFormat = (slotDate) => {
     const dateArray = slotDate.split("_");
@@ -79,6 +82,24 @@ const MyAppointments = () => {
       order_id: order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
       handler: async (response) => {
         console.log(response);
+
+        try {
+          const { data } = await axios.post(
+            backendUrl + "/api/user/verifyRazorpay",
+            response,
+            {
+              headers: { token },
+            }
+          );
+
+          if (data.success) {
+            getUserAppointments();
+            navigate("/my-appointments");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.message || "Error in payment verification");
+        }
       },
     };
 
@@ -142,7 +163,12 @@ const MyAppointments = () => {
             </div>
             <div></div>
             <div className="flex flex-col gap-2 justify-end">
-              {!item.cancelled && (
+              {!item.cancelled && item.payment && (
+                <button className="text-sm text-emerald-600 font-medium text-center sm:min-w-48 py-2 px-6 border rounded-md mb-12 cursor-not-allowed">
+                  Paid
+                </button>
+              )}
+              {!item.cancelled && !item.payment && (
                 <button
                   onClick={() => appointmentRazorpay(item._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 px-6 border rounded-md hover:bg-primary hover:text-white transition-all duration-300 hover:scale-105 hover:font-medium hover:shadow-lg"
@@ -151,7 +177,7 @@ const MyAppointments = () => {
                 </button>
               )}
 
-              {!item.cancelled && (
+              {!item.cancelled && !item.payment && (
                 <button
                   onClick={() => cancelAppointment(item._id)}
                   className="text-sm text-stone-500 text-center sm:min-w-48 py-2 px-6 border rounded-md hover:bg-red-600 hover:text-white transition-all duration-300 hover:scale-105 hover:font-medium hover:shadow-lg"

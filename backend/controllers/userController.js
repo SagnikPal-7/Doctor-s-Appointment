@@ -261,7 +261,7 @@ const paymentRazorpay = async (req, res) => {
 
     // creating options for razorpay payment
     const options = {
-      amount: appointmentData.amount * 100, // amount in the smallest currency unit
+      amount: appointmentData.amount, // amount in the smallest currency unit
       currency: process.env.CURRENCY,
       receipt: appointmentId,
     };
@@ -270,6 +270,26 @@ const paymentRazorpay = async (req, res) => {
     const order = await razorpayInstance.orders.create(options);
 
     res.json({ success: true, order });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//API to verify payment of razorpay
+const verifyRazorpay = async (req, res) => {
+  try {
+    const { razorpay_order_id } = req.body;
+    const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id);
+
+    if (orderInfo.status === "paid") {
+      await appointmentModel.findByIdAndUpdate(orderInfo.receipt, {
+        payment: true,
+      });
+      res.json({ success: true, message: "Payment verified and updated" });
+    } else {
+      res.json({ success: false, message: "Payment failed" });
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ success: false, message: error.message });
@@ -285,4 +305,5 @@ export {
   listAppointment,
   cancelAppointment,
   paymentRazorpay,
+  verifyRazorpay,
 };
