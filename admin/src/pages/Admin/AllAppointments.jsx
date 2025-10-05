@@ -70,8 +70,13 @@ const AllAppointments = () => {
               {currency}
               {item.amount}
             </p>
-            {item.cancelled ? (
-              <p className="text-red-400 text-xs font-medium"> Cancelled</p>
+            {item.payment ? (
+              <p className="text-green-500 text-xs font-medium "> Paid</p>
+            ) : item.cancelled ? (
+              <p className="text-red-400 text-xs font-medium cursor-not-allowed">
+                {" "}
+                Cancelled
+              </p>
             ) : (
               <img
                 onClick={() => cancelAppointment(item._id)}
