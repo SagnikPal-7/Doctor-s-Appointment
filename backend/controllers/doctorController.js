@@ -42,9 +42,7 @@ const loginDoctor = async (req, res) => {
     const isMatch = await bcrypt.compare(password, doctor.password);
 
     if (isMatch) {
-      const token = jwt.sign({ id: doctor._id }, process.env.JWT_SECRET, {
-        expiresIn: "1d",
-      });
+      const token = jwt.sign({ id: doctor._id }, process.env.JWT_SECRET);
       res.json({ success: true, token });
     } else {
       res.status(401).json({ success: false, message: "Invalid Credentials" });
@@ -67,4 +65,57 @@ const appointmentsDoctor = async (req, res) => {
   }
 };
 
-export { changeAvailability, doctorList, loginDoctor, appointmentsDoctor };
+//API to mark appoinment completed for doctor panel
+const appointmentCompleted = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    const docId = req.docId;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    if (appointmentData && String(appointmentData.docId) === String(docId)) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, {
+        isCompleted: true,
+      });
+      return res.json({ success: true, message: "Appointment completed" });
+    } else {
+      return res.status(404).json({ success: false, message: "Mark Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+//API to cancel appoinment for doctor panel
+const appointmentCancel = async (req, res) => {
+  try {
+    const { appointmentId } = req.body;
+    const docId = req.docId;
+
+    const appointmentData = await appointmentModel.findById(appointmentId);
+
+    if (appointmentData && String(appointmentData.docId) === String(docId)) {
+      await appointmentModel.findByIdAndUpdate(appointmentId, {
+        cancelled: true,
+      });
+      return res.json({ success: true, message: "Appointment Cancelled" });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "Cancellation Failed" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export {
+  changeAvailability,
+  doctorList,
+  loginDoctor,
+  appointmentsDoctor,
+  appointmentCompleted,
+  appointmentCancel,
+};
