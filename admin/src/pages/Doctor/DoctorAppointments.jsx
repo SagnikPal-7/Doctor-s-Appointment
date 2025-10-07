@@ -69,9 +69,9 @@ const DoctorAppointments = () => {
             </p>
 
             {item.cancelled ? (
-              <p> Cancelled </p>
+              <p className="text-red-500 text-xs font-medium"> Cancelled </p>
             ) : item.isCompleted ? (
-              <p> Completed </p>
+              <p className="text-green-500 text-xs font-medium"> Completed </p>
             ) : (
               <div className="flex">
                 <img
