@@ -94,7 +94,7 @@ const Doctor = () => {
               speciality === "Pediatricians" ? "bg-indigo-100 text-black" : ""
             }`}
           >
-            Pediatrician
+            Pediatricians
           </p>
           <p
             onClick={() =>
