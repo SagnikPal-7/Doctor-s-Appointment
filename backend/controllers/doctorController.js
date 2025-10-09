@@ -5,8 +5,19 @@ import jwt from "jsonwebtoken";
 
 const changeAvailability = async (req, res) => {
   try {
-    const docId = req.docId;
+    // Support both doctor panel (req.docId) and admin panel (req.body.docId)
+    const docId = req.docId || req.body.docId;
+    if (!docId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Doctor ID missing" });
+    }
     const docData = await doctorModel.findById(docId);
+    if (!docData) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Doctor not found" });
+    }
     await doctorModel.findByIdAndUpdate(docId, {
       available: !docData.available,
     });

@@ -45,7 +45,7 @@ const AllAppointments = () => {
             <p className="max-sm:hidden">{index + 1}</p>
             <div className="flex items-center gap-2">
               <img
-                className="w-11 rounded-full"
+                className="w-11 h-11 rounded-full"
                 src={item.userData?.image}
                 alt=""
               />
@@ -59,7 +59,7 @@ const AllAppointments = () => {
 
             <div className="flex items-center gap-2">
               <img
-                className="w-11 rounded-full bg-gray-200"
+                className="w-11 h-11 rounded-full bg-gray-200"
                 src={item.docData?.image}
                 alt=""
               />

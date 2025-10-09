@@ -27,7 +27,7 @@ const Login = () => {
           localStorage.setItem("aToken", data.token);
           setAToken(data.token);
         } else {
-          toast.error(data.message);
+          toast.error(data.message); // Show toast for admin login error
         }
       } else {
         const { data } = await axios.post(backendUrl + "/api/doctor/login", {
@@ -39,11 +39,11 @@ const Login = () => {
           setDToken(data.token);
           console.log(data.token);
         } else {
-          toast.error(data.message);
+          toast.error(data.message); // Show toast for doctor login error
         }
       }
     } catch (error) {
-      // toast.error("Login Failed");
+      toast.error("Login Failed"); // Show toast for network/server errors
     }
   };
 
