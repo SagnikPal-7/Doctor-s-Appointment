@@ -10,7 +10,7 @@ const authDoctor = async (req, res, next) => {
         .json({ success: false, message: "Not authorized login again" });
     }
 
-    const token_decode = jwt.verify(dtoken, process.env.JWT_SECRET);
+  const token_decode = jwt.verify(dtoken, process.env.JWT_SECRET, { ignoreExpiration: true });
 
     req.docId = token_decode.id;
 
