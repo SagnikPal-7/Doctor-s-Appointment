@@ -37,63 +37,71 @@ const AllAppointments = () => {
           <p>Actions</p>
         </div>
 
-        {appointments.map((item, index) => (
-          <div
-            className="flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50"
-            key={index}
-          >
-            <p className="max-sm:hidden">{index + 1}</p>
-            <div className="flex items-center gap-2">
-              <img
-                className="w-11 h-11 rounded-full"
-                src={item.userData?.image}
-                alt=""
-              />
-              <p>{item.userData?.name}</p>
-            </div>
-
-            <p className="max-sm:hidden">{calculateAge(item.userData?.dob)}</p>
-            <p>
-              {slotDateFormat(item.slotDate)}, {item.slotTime}
-            </p>
-
-            <div className="flex items-center gap-2">
-              <img
-                className="w-11 h-11 rounded-full bg-gray-200"
-                src={item.docData?.image}
-                alt=""
-              />
-              <p>{item.docData?.name}</p>
-            </div>
-
-            <p>
-              {currency}
-              {item.amount}
-            </p>
-            {item.payment ? (
-              <p className="text-green-500 text-xs font-medium cursor-not-allowed ">
-                {" "}
-                Paid
-              </p>
-            ) : item.cancelled ? (
-              <p className="text-red-400 text-xs font-medium cursor-not-allowed">
-                {" "}
-                Cancelled
-              </p>
-            ) : item.isCompleted ? (
-              <p className="text-green-500 text-xs font-medium cursor-not-allowed">
-                Completed
-              </p>
-            ) : (
-              <img
-                onClick={() => cancelAppointment(item._id)}
-                className="w-10 cursor-pointer"
-                src={assets.cancel_icon}
-                alt=""
-              />
-            )}
+        {appointments.length === 0 ? (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] text-center text-zinc-500 text-lg font-medium">
+            No Appointments yet
           </div>
-        ))}
+        ) : (
+          appointments.map((item, index) => (
+            <div
+              className="flex flex-wrap justify-between max-sm:gap-2 sm:grid sm:grid-cols-[0.5fr_3fr_1fr_3fr_3fr_1fr_1fr] items-center text-gray-500 py-3 px-6 border-b hover:bg-gray-50"
+              key={index}
+            >
+              <p className="max-sm:hidden">{index + 1}</p>
+              <div className="flex items-center gap-2">
+                <img
+                  className="w-11 h-11 rounded-full"
+                  src={item.userData?.image}
+                  alt=""
+                />
+                <p>{item.userData?.name}</p>
+              </div>
+
+              <p className="max-sm:hidden">
+                {calculateAge(item.userData?.dob)}
+              </p>
+              <p>
+                {slotDateFormat(item.slotDate)}, {item.slotTime}
+              </p>
+
+              <div className="flex items-center gap-2">
+                <img
+                  className="w-11 h-11 rounded-full bg-gray-200"
+                  src={item.docData?.image}
+                  alt=""
+                />
+                <p>{item.docData?.name}</p>
+              </div>
+
+              <p>
+                {currency}
+                {item.amount}
+              </p>
+              {item.payment ? (
+                <p className="text-green-500 text-xs font-medium cursor-not-allowed ">
+                  {" "}
+                  Paid
+                </p>
+              ) : item.cancelled ? (
+                <p className="text-red-400 text-xs font-medium cursor-not-allowed">
+                  {" "}
+                  Cancelled
+                </p>
+              ) : item.isCompleted ? (
+                <p className="text-green-500 text-xs font-medium cursor-not-allowed">
+                  Completed
+                </p>
+              ) : (
+                <img
+                  onClick={() => cancelAppointment(item._id)}
+                  className="w-10 cursor-pointer"
+                  src={assets.cancel_icon}
+                  alt=""
+                />
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
